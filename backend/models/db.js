@@ -1,12 +1,20 @@
-const mysql = require("mysql2");
-require("dotenv").config();
+const { MongoClient, ServerApiVersion } = require('mongodb');
 
-const db = mysql.createPool({
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
+const client = new MongoClient(process.env.MONGO_DB_URI, {
+  serverApi: {
+    version: ServerApiVersion.v1,
+    strict: true,
+    deprecationErrors: true,
+  },
 });
 
-console.log(process.env.DB_HOST);
-module.exports = db;
+exports.database = client.db(process.env.MONGO_DB_NAME);
+
+exports.connectDatabase = async () => {
+  try {
+    await client.connect();
+    console.log('Conexão estabelecida com sucesso!');
+  } catch (error) {
+    console.error(err.message);
+  }
+};

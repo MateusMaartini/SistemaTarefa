@@ -12,17 +12,25 @@ import {
 
 const TaskList = ({ tasks, setTasks }) => {
   const [loading, setLoading] = useState(false);
-  const [searchTerm, setSearchTerm] = useState(""); // Estado para o termo de busca
+  const [searchTerm, setSearchTerm] = useState("");
 
   const fetchTasks = async () => {
     setLoading(true);
     try {
       const response = await axios.get("http://localhost:5000/tarefas");
-      setTasks(response.data.sort((a, b) => a.ordem - b.ordem));
+
+      // Verifica se os dados são uma lista antes de definir as tarefas
+      if (Array.isArray(response.data)) {
+        setTasks(response.data); // O backend já envia ordenado
+      } else {
+        console.error("Resposta inválida do backend:", response.data);
+        setTasks([]); // Garante que o estado de tarefas não fique indefinido
+      }
     } catch (error) {
       console.error("Erro ao carregar as tarefas:", error);
+      setTasks([]); // Define uma lista vazia em caso de erro
     } finally {
-      setLoading(false);
+      setLoading(false); // Finaliza o estado de carregamento
     }
   };
 
@@ -39,12 +47,11 @@ const TaskList = ({ tasks, setTasks }) => {
       updatedTasks[currentIndex],
     ];
 
-    // Atualizar estado local
     setTasks(
       updatedTasks.map((task, index) => ({ ...task, ordem: index + 1 }))
     );
 
-    // Sincronizar com o back-end
+    // Sincronização com o back-end
     try {
       await axios.put("http://localhost:5000/tarefas/reorder", {
         tasks: updatedTasks.map((task) => ({
@@ -66,7 +73,6 @@ const TaskList = ({ tasks, setTasks }) => {
     task.nome.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // Calcula as tarefas pendentes e concluídas
   const totalTasks = tasks.length;
   const completedTasks = tasks.filter((task) => task.concluida).length;
   const pendingTasks = totalTasks - completedTasks;
@@ -105,7 +111,7 @@ const TaskList = ({ tasks, setTasks }) => {
               key={task.id}
               task={task}
               onTaskUpdate={fetchTasks}
-              onMove={handleMove} // Passando a função correta aqui
+              onMove={handleMove}
             />
           ))}
         </List>

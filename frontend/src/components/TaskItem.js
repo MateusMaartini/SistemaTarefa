@@ -37,7 +37,7 @@ const TaskItem = ({ task, onTaskUpdate, onMove }) => {
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
 
-  const theme = useTheme(); // Detecta o tema atual
+  const theme = useTheme();
   const isHighCost = task.custo >= 1000; // Verifica se o custo é maior ou igual a 1000
   const isUrgent = new Date(task.data_limite) < new Date(); // Verifica se a tarefa está vencida
 
@@ -69,7 +69,7 @@ const TaskItem = ({ task, onTaskUpdate, onMove }) => {
 
   // Verifica se task.custo é um número válido antes de chamar toFixed
   const custo = Number(task.custo);
-  const formattedCusto = !isNaN(custo) ? custo.toFixed(2) : "N/A"; // Se não for um número válido, mostra 'N/A'
+  const formattedCusto = !isNaN(custo) ? custo.toFixed(2) : "N/A";
 
   return (
     <>
@@ -89,30 +89,28 @@ const TaskItem = ({ task, onTaskUpdate, onMove }) => {
               boxShadow:
                 theme.palette.mode === "dark"
                   ? "0 4px 12px rgba(0, 0, 0, 0.6)"
-                  : "0 4px 12px rgba(0, 0, 0, 0.1)", // Sombra mais forte no modo escuro
+                  : "0 4px 12px rgba(0, 0, 0, 0.1)",
               width: "100%",
-              borderRadius: "16px", // Bordas mais arredondadas
+              borderRadius: "16px",
               overflow: "hidden",
               backgroundColor: isHighCost
                 ? theme.palette.mode === "dark"
-                  ? "#FF7043" // Vermelho mais suave no modo dark
-                  : "#FFEBEE" // Rosa claro no modo claro
+                  ? "#FF7043"
+                  : "#FFEBEE"
                 : theme.palette.mode === "dark"
                   ? "#424242"
-                  : "#E3F2FD", // Azul suave para tarefas normais
+                  : "#E3F2FD",
               color: isHighCost
                 ? theme.palette.mode === "dark"
                   ? "#FFF"
                   : "#D32F2F"
                 : theme.palette.mode === "dark"
                   ? "#FFF"
-                  : "#1976D2", // Azul suave ou vermelho dependendo do custo
+                  : "#1976D2",
               marginBottom: "20px",
-              border: isHighCost && "2px solid #FF7043", // Borda fina para tarefas de alto custo
-              transition: "all 0.3s ease", // Transição suave
-              "&:hover": {
-                boxShadow: "0 8px 16px rgba(0, 0, 0, 0.2)", // Efeito hover suave
-              },
+              border: isHighCost && "2px solid #FF7043",
+              transition: "all 0.3s ease",
+              boxShadow: "0 8px 16px rgba(0, 0, 0, 0.2)",
             }}
           >
             <CardContent>
@@ -124,15 +122,14 @@ const TaskItem = ({ task, onTaskUpdate, onMove }) => {
                     ? "#BDBDBD"
                     : theme.palette.mode === "dark"
                       ? "#90CAF9"
-                      : "#1976D2", // Azul suave ou mais neutro para concluídas
+                      : "#1976D2",
                   mb: 1,
-                  textDecoration: task.completed ? "line-through" : "none", // Risco nas concluídas
+                  textDecoration: task.completed ? "line-through" : "none", //
                 }}
               >
                 {task.nome}
               </Typography>
 
-              {/* Tarefa Urgente */}
               {isUrgent && (
                 <Chip
                   label="Vencida"
@@ -157,7 +154,7 @@ const TaskItem = ({ task, onTaskUpdate, onMove }) => {
                       : "#FF7043"
                     : theme.palette.mode === "dark"
                       ? "#90CAF9"
-                      : "green", // Diferencia o custo alto
+                      : "green",
                   fontWeight: "medium",
                 }}
               >
@@ -229,7 +226,6 @@ const TaskItem = ({ task, onTaskUpdate, onMove }) => {
               </div>
             </CardActions>
 
-            {/* Modal para Edição */}
             <Dialog
               open={isEditing}
               onClose={() => setIsEditing(false)}
@@ -332,7 +328,6 @@ const TaskItem = ({ task, onTaskUpdate, onMove }) => {
         </Badge>
       </Slide>
 
-      {/* Snackbar para feedback */}
       <Snackbar
         open={openSnackbar}
         autoHideDuration={6000}
